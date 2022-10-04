@@ -8,11 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
+    @EnvironmentObject var timerStatus: TimerManagement
+    
     @State var timer:Timer!
-    @State var working = true
-    let breakTime = 3
-    let workTime = 15
-    @State var count = 0
     @State var canCount = false
     @State var cntbtnText = "開始"
     
@@ -39,7 +37,8 @@ struct ContentView: View {
             
             
             Spacer()
-            Text("\(count)")
+//            Text("\(count)")
+            Text("\(timerStatus.count)")
                 .font(.largeTitle)
                 .padding()
             
@@ -57,25 +56,25 @@ struct ContentView: View {
                     timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: {_ in
                         
                         // タイマーが0以下のとき
-                        if (count <= 1) {
+                        if (timerStatus.count <= 1) {
                             // カウント終了処理
                             
                             stopCount()
                             
-                            if (working) {
-                                // 仕事中(working = true)ならタイマーを休憩時間にセット
-                                count = breakTime
-                                working = false
+                            if (timerStatus.working) {
+                                // 仕事中(timerStatus.working = true)ならタイマーを休憩時間にセット
+                                timerStatus.count = timerStatus.breakTime
+                                timerStatus.working = false
                                 print("休憩時間に入ります")
                             } else {
-                                // 休憩中(working = false)ならタイマーを仕事時間にセット
-                                count = workTime
-                                working = true
+                                // 休憩中(timerStatus.working = false)ならタイマーを仕事時間にセット
+                                timerStatus.count = timerStatus.workTime
+                                timerStatus.working = true
                                 print("仕事時間に入ります")
                             }
                         } else {
                             // タイマー1減らす
-                            count -= 1
+                            timerStatus.count -= 1
                         }
                     })
                     
@@ -94,5 +93,6 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            
     }
 }
