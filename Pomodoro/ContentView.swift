@@ -10,9 +10,15 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var timerStatus: TimerManagement
     
-    @State var timer:Timer!
+    @State private var timer:Timer!
+    @State private var cntbtnText = "開始"
     @State var canCount = false
-    @State var cntbtnText = "開始"
+    @State private var showingSettingSheet = false
+    
+    @State private var timerMin = 0
+    @State private var timerSec = 0
+    @State var zeroFillmin = "25"
+    @State var zeroFillsec = "00"
     
     func stopCount() {
         // カウント終了
@@ -24,6 +30,13 @@ struct ContentView: View {
     }
     
     
+    func timer_sec_min_calc() {
+        timerMin = Int(floor(Double(timerStatus.count / 60)))
+        timerSec = timerStatus.count % 60
+        
+        zeroFillmin = String(format: "%02d", timerMin)
+        zeroFillsec = String(format: "%02d", timerSec)
+    }
     
     var body: some View {
         VStack {
@@ -31,21 +44,33 @@ struct ContentView: View {
                 Text("ポモドーロ")
                     .font(.largeTitle)
                     .fontWeight(.bold)
-                    .padding()
+                    
                 Spacer()
+                
+                Button {
+                    showingSettingSheet.toggle()
+                } label: {
+                    Image(systemName: "gearshape")
+                        .foregroundColor(Color("AccentColor"))
+                        .font(.largeTitle)
+                }
+
             }
-            
+            .padding()
             
             Spacer()
-//            Text("\(count)")
-            Text("\(timerStatus.count)")
+            
+            Text("\(zeroFillmin):\(zeroFillsec)")
                 .font(.largeTitle)
                 .padding()
             
             Button {
+                // カウントダウンしない場合
                 if (canCount) {
                     // カウント終了
                     stopCount()
+                
+                // カウントダウンする場合
                 } else {
                     // カウント開始
                     canCount = true
@@ -58,23 +83,28 @@ struct ContentView: View {
                         // タイマーが0以下のとき
                         if (timerStatus.count <= 1) {
                             // カウント終了処理
-                            
                             stopCount()
                             
+                            // 休憩時間に入るか仕事時間に入るか
                             if (timerStatus.working) {
                                 // 仕事中(timerStatus.working = true)ならタイマーを休憩時間にセット
                                 timerStatus.count = timerStatus.breakTime
                                 timerStatus.working = false
+                                timer_sec_min_calc()
                                 print("休憩時間に入ります")
                             } else {
                                 // 休憩中(timerStatus.working = false)ならタイマーを仕事時間にセット
                                 timerStatus.count = timerStatus.workTime
                                 timerStatus.working = true
+                                timer_sec_min_calc()
                                 print("仕事時間に入ります")
                             }
+                            
                         } else {
                             // タイマー1減らす
                             timerStatus.count -= 1
+                            print(timerStatus.count)
+                            timer_sec_min_calc()
                         }
                     })
                     
@@ -82,6 +112,7 @@ struct ContentView: View {
             } label: {
                 Text(cntbtnText)
                     .font(.title)
+                    .foregroundColor(Color("AccentColor"))
             }
 
             Spacer()
@@ -93,6 +124,6 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-            
+            .environmentObject(TimerManagement())
     }
 }
