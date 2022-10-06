@@ -11,8 +11,6 @@ class TimerManagement: ObservableObject {
     @Published var working:Bool = true
     @Published var breakTime:Int = 3
     @Published var workTime:Int = 15
-    @Published var count:Int = 0
+    @Published var count:Int = 15
     
-    
-
 }

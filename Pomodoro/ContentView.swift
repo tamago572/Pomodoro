@@ -10,9 +10,11 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var timerStatus: TimerManagement
     
-    @State var timer:Timer!
+    @State private var timer:Timer!
+    @State private var cntbtnText = "開始"
     @State var canCount = false
-    @State var cntbtnText = "開始"
+    @State private var showingSettingSheet = false
+    
     
     func stopCount() {
         // カウント終了
@@ -24,20 +26,28 @@ struct ContentView: View {
     }
     
     
-    
     var body: some View {
         VStack {
             HStack {
                 Text("ポモドーロ")
                     .font(.largeTitle)
                     .fontWeight(.bold)
-                    .padding()
+                    
                 Spacer()
+                
+                Button {
+                    showingSettingSheet.toggle()
+                } label: {
+                    Image(systemName: "gearshape")
+                        .foregroundColor(Color("AccentColor"))
+                        .font(.largeTitle)
+                }
+
             }
-            
+            .padding()
             
             Spacer()
-//            Text("\(count)")
+            
             Text("\(timerStatus.count)")
                 .font(.largeTitle)
                 .padding()
@@ -82,6 +92,7 @@ struct ContentView: View {
             } label: {
                 Text(cntbtnText)
                     .font(.title)
+                    .foregroundColor(Color("AccentColor"))
             }
 
             Spacer()
