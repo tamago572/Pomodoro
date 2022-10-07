@@ -10,10 +10,11 @@ import SwiftUI
 struct ContentView: View {
     @EnvironmentObject var timerStatus: TimerManagement
     
+    
     @State private var timer:Timer!
     @State private var cntbtnText = "開始"
     @State var canCount = false
-    @State private var showingSettingSheet = false
+    @State private var showingSettingsSheet = false
     
     @State private var timerMin = 0
     @State private var timerSec = 0
@@ -48,11 +49,14 @@ struct ContentView: View {
                 Spacer()
                 
                 Button {
-                    showingSettingSheet.toggle()
+                    showingSettingsSheet.toggle()
                 } label: {
                     Image(systemName: "gearshape")
                         .foregroundColor(Color("AccentColor"))
                         .font(.largeTitle)
+                }
+                .sheet(isPresented: $showingSettingsSheet) {
+                    SettingsView()
                 }
 
             }
@@ -125,5 +129,38 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
             .environmentObject(TimerManagement())
+        SettingsView()
+            .environmentObject(AppSettings())
+        
+    }
+}
+
+
+// Settings View
+struct SettingsView: View {
+    @EnvironmentObject var appSettings: AppSettings
+    var body: some View {
+        VStack {
+            
+            HStack {
+                Text("設定")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding()
+                Spacer()
+            }
+            
+                Form {
+                    Section(header: Text("タイマーの設定")) {
+                        Toggle(isOn: $appSettings.playSoundOnDone) {
+                            Text("カウント終了時にサウンドを鳴らす")
+                        }
+                        
+                    }
+            }
+                
+            Spacer()
+        }
+            
     }
 }

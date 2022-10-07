@@ -7,6 +7,7 @@ struct PomodoroApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(TimerManagement())
+                .environmentObject(AppSettings())
         }
     }
 }
