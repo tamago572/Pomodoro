@@ -49,14 +49,13 @@ struct ContentView: View {
                 Spacer()
                 
                 Button {
-                    showingSettingsSheet.toggle()
+                    showingSettingsSheet = true
                 } label: {
                     Image(systemName: "gearshape")
-                        .foregroundColor(Color("AccentColor"))
                         .font(.largeTitle)
                 }
-                .sheet(isPresented: $showingSettingsSheet) {
-                    SettingsView()
+                .fullScreenCover(isPresented: $showingSettingsSheet) {
+                    SettingsView(isActive: $showingSettingsSheet)
                 }
 
             }
@@ -129,7 +128,7 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
             .environmentObject(TimerManagement())
-        SettingsView()
+        SettingsView(isActive: Binding.constant(false))
             .environmentObject(AppSettings())
         
     }
@@ -139,6 +138,7 @@ struct ContentView_Previews: PreviewProvider {
 // Settings View
 struct SettingsView: View {
     @EnvironmentObject var appSettings: AppSettings
+    @Binding var isActive: Bool
     var body: some View {
         VStack {
             
@@ -147,20 +147,38 @@ struct SettingsView: View {
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .padding()
-                Spacer()
-            }
-            
-                Form {
-                    Section(header: Text("タイマーの設定")) {
-                        Toggle(isOn: $appSettings.playSoundOnDone) {
-                            Text("カウント終了時にサウンドを鳴らす")
-                        }
-                        
-                    }
-            }
                 
-            Spacer()
-        }
+                Spacer()
+                
+                Button {
+                    isActive = false
+                } label: {
+                    Text("閉じる")
+                }
+                .padding()
+
+            }
             
+            Divider()
+            
+            
+                
+            ScrollView {
+                HStack {
+                    Text("タイマーの設定")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        
+                    Spacer()
+                }.padding([.top, .leading])
+                
+                VStack {
+                    Toggle(isOn: $appSettings.playSoundOnDone) {
+                        Text("カウント終了時にサウンドを鳴らす")
+                    }
+                }
+                .padding()
+            }
+        }
     }
 }
