@@ -8,8 +8,11 @@
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject var timerStatus: TimerManagement
+    // バックグラウンド処理のための変数
+    @Environment(\.scenePhase) private var scenePhase
     
+    // タイマーのカウントなどを管理する
+    @EnvironmentObject var timerStatus: TimerStatus
     
     @State private var timer:Timer!
     @State private var cntbtnText = "開始"
@@ -101,16 +104,16 @@ struct ContentView: View {
                                 timerStatus.working = true
                                 timer_sec_min_calc()
                                 print("仕事時間に入ります")
+                                
                             }
-                            
                         } else {
                             // タイマー1減らす
                             timerStatus.count -= 1
                             print(timerStatus.count)
                             timer_sec_min_calc()
+                            
                         }
                     })
-                    
                 }
             } label: {
                 Text(cntbtnText)
@@ -120,16 +123,15 @@ struct ContentView: View {
 
             Spacer()
         }
-        
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-            .environmentObject(TimerManagement())
+            .environmentObject(TimerStatus())
         SettingsView(isActive: Binding.constant(false))
-            .environmentObject(AppSettings())
+            .environmentObject(TimerSettings())
         
     }
 }
@@ -137,11 +139,12 @@ struct ContentView_Previews: PreviewProvider {
 
 // Settings View
 struct SettingsView: View {
-    @EnvironmentObject var appSettings: AppSettings
+    
+    @EnvironmentObject var appSettings: TimerSettings
     @Binding var isActive: Bool
+    
     var body: some View {
         VStack {
-            
             HStack {
                 Text("設定")
                     .font(.largeTitle)
@@ -161,8 +164,6 @@ struct SettingsView: View {
             
             Divider()
             
-            
-                
             ScrollView {
                 HStack {
                     Text("タイマーの設定")
@@ -170,7 +171,8 @@ struct SettingsView: View {
                         .fontWeight(.bold)
                         
                     Spacer()
-                }.padding([.top, .leading])
+                }
+                .padding([.top, .leading])
                 
                 VStack {
                     Toggle(isOn: $appSettings.playSoundOnDone) {

@@ -6,8 +6,8 @@ struct PomodoroApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(TimerManagement())
-                .environmentObject(AppSettings())
+                .environmentObject(TimerSettings())
+                .environmentObject(TimerStatus())
         }
     }
 }

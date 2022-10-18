@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		D719B92428EB36CE005B0DE3 /* TimerManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = D719B92328EB36CE005B0DE3 /* TimerManagement.swift */; };
 		D7255A5D28EFFF550098E242 /* AppSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7255A5C28EFFF550098E242 /* AppSettings.swift */; };
 		D7B8F8B028E9BB62008E3FA4 /* PomodoroApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B8F8AF28E9BB62008E3FA4 /* PomodoroApp.swift */; };
 		D7B8F8B228E9BB62008E3FA4 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B8F8B128E9BB62008E3FA4 /* ContentView.swift */; };
@@ -36,7 +35,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		D719B92328EB36CE005B0DE3 /* TimerManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerManagement.swift; sourceTree = "<group>"; };
 		D7255A5C28EFFF550098E242 /* AppSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettings.swift; sourceTree = "<group>"; };
 		D7B8F8AC28E9BB62008E3FA4 /* Pomodoro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pomodoro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7B8F8AF28E9BB62008E3FA4 /* PomodoroApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroApp.swift; sourceTree = "<group>"; };
@@ -49,6 +47,7 @@
 		D7B8F8C728E9BB63008E3FA4 /* PomodoroUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PomodoroUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7B8F8CB28E9BB63008E3FA4 /* PomodoroUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroUITests.swift; sourceTree = "<group>"; };
 		D7B8F8CD28E9BB63008E3FA4 /* PomodoroUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		D7B8FFD328FABF4400B0B669 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,8 +98,8 @@
 		D7B8F8AE28E9BB62008E3FA4 /* Pomodoro */ = {
 			isa = PBXGroup;
 			children = (
+				D7B8FFD328FABF4400B0B669 /* Info.plist */,
 				D7B8F8AF28E9BB62008E3FA4 /* PomodoroApp.swift */,
-				D719B92328EB36CE005B0DE3 /* TimerManagement.swift */,
 				D7B8F8B128E9BB62008E3FA4 /* ContentView.swift */,
 				D7255A5C28EFFF550098E242 /* AppSettings.swift */,
 				D7B8F8B328E9BB63008E3FA4 /* Assets.xcassets */,
@@ -268,7 +267,6 @@
 				D7B8F8B228E9BB62008E3FA4 /* ContentView.swift in Sources */,
 				D7B8F8B028E9BB62008E3FA4 /* PomodoroApp.swift in Sources */,
 				D7255A5D28EFFF550098E242 /* AppSettings.swift in Sources */,
-				D719B92428EB36CE005B0DE3 /* TimerManagement.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -427,6 +425,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Pomodoro/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "ポモドーロ";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -468,6 +468,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = Pomodoro/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "ポモドーロ";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.productivity";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
