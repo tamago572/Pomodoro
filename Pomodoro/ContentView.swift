@@ -19,10 +19,7 @@ struct ContentView: View {
     @State var canCount = false
     @State private var showingSettingsSheet = false
     
-    @State private var timerMin = 0
-    @State private var timerSec = 0
-    @State var zeroFillmin = "25"
-    @State var zeroFillsec = "00"
+    let timerProcess = TimerProcess()
     
     func stopCount() {
         // カウント終了
@@ -34,20 +31,24 @@ struct ContentView: View {
     }
     
     
-    func timer_sec_min_calc() {
-        timerMin = Int(floor(Double(timerStatus.count / 60)))
-        timerSec = timerStatus.count % 60
-        
-        zeroFillmin = String(format: "%02d", timerMin)
-        zeroFillsec = String(format: "%02d", timerSec)
-    }
-    
     var body: some View {
         VStack {
             HStack {
                 Text("ポモドーロ")
                     .font(.largeTitle)
                     .fontWeight(.bold)
+                    .onChange(of: scenePhase) { phase in
+                        switch phase {
+                        case .active:
+                            print("active")
+                        case .inactive:
+                            print("inactive")
+                        case .background:
+                            print("background")
+                        @unknown default:
+                            print("@unknown")
+                        }
+                    }
                     
                 Spacer()
                 
@@ -66,7 +67,7 @@ struct ContentView: View {
             
             Spacer()
             
-            Text("\(zeroFillmin):\(zeroFillsec)")
+            Text("\(timerProcess.zeroFillmin):\(timerProcess.zeroFillsec)")
                 .font(.largeTitle)
                 .padding()
             
@@ -96,13 +97,13 @@ struct ContentView: View {
                                 // 仕事中(timerStatus.working = true)ならタイマーを休憩時間にセット
                                 timerStatus.count = timerStatus.breakTime
                                 timerStatus.working = false
-                                timer_sec_min_calc()
+                                timerProcess.timer_sec_min_calc()
                                 print("休憩時間に入ります")
                             } else {
                                 // 休憩中(timerStatus.working = false)ならタイマーを仕事時間にセット
                                 timerStatus.count = timerStatus.workTime
                                 timerStatus.working = true
-                                timer_sec_min_calc()
+                                timerProcess.timer_sec_min_calc()
                                 print("仕事時間に入ります")
                                 
                             }
@@ -110,7 +111,7 @@ struct ContentView: View {
                             // タイマー1減らす
                             timerStatus.count -= 1
                             print(timerStatus.count)
-                            timer_sec_min_calc()
+                            timerProcess.timer_sec_min_calc()
                             
                         }
                     })

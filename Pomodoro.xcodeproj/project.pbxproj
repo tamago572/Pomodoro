@@ -15,6 +15,7 @@
 		D7B8F8C228E9BB63008E3FA4 /* PomodoroTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B8F8C128E9BB63008E3FA4 /* PomodoroTests.swift */; };
 		D7B8F8CC28E9BB63008E3FA4 /* PomodoroUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B8F8CB28E9BB63008E3FA4 /* PomodoroUITests.swift */; };
 		D7B8F8CE28E9BB63008E3FA4 /* PomodoroUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7B8F8CD28E9BB63008E3FA4 /* PomodoroUITestsLaunchTests.swift */; };
+		D7EAF78A290C36C300E244B2 /* TimerProcess.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7EAF789290C36C300E244B2 /* TimerProcess.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,6 +49,7 @@
 		D7B8F8CB28E9BB63008E3FA4 /* PomodoroUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroUITests.swift; sourceTree = "<group>"; };
 		D7B8F8CD28E9BB63008E3FA4 /* PomodoroUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PomodoroUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		D7B8FFD328FABF4400B0B669 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D7EAF789290C36C300E244B2 /* TimerProcess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimerProcess.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 				D7B8FFD328FABF4400B0B669 /* Info.plist */,
 				D7B8F8AF28E9BB62008E3FA4 /* PomodoroApp.swift */,
 				D7B8F8B128E9BB62008E3FA4 /* ContentView.swift */,
+				D7EAF789290C36C300E244B2 /* TimerProcess.swift */,
 				D7255A5C28EFFF550098E242 /* AppSettings.swift */,
 				D7B8F8B328E9BB63008E3FA4 /* Assets.xcassets */,
 				D7B8F8B528E9BB63008E3FA4 /* Pomodoro.entitlements */,
@@ -265,6 +268,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				D7B8F8B228E9BB62008E3FA4 /* ContentView.swift in Sources */,
+				D7EAF78A290C36C300E244B2 /* TimerProcess.swift in Sources */,
 				D7B8F8B028E9BB62008E3FA4 /* PomodoroApp.swift in Sources */,
 				D7255A5D28EFFF550098E242 /* AppSettings.swift in Sources */,
 			);
