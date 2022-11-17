@@ -13,6 +13,6 @@ class TimerStatus: ObservableObject {
     @Published var breakTime:Int = 300
     @Published var workTime:Int = 1500
     @Published var count:Int = 1500
-    @Published var scheduledTimerProgress:Int = 0
+   
     
 }

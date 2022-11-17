@@ -29,24 +29,28 @@ struct ContentView: View {
         canCount = false
         cntbtnText = "開始"
         print("カウントを終了します")
+        print("canCount\(canCount)")
         // タイマー破棄
         timer.invalidate()
-        timerStatus.scheduledTimerProgress = 0
-        // 休憩時間に入るか仕事時間に入るか
-        if (timerStatus.working) {
-            // 仕事中(timerStatus.working = true)ならタイマーを休憩時間にセット
-            timerStatus.count = timerStatus.breakTime
-            timerStatus.working = false
-            timer_sec_min_calc()
-            print("休憩時間に入ります")
-        } else {
-            // 休憩中(timerStatus.working = false)ならタイマーを仕事時間にセット
-            timerStatus.count = timerStatus.workTime
-            timerStatus.working = true
-            timer_sec_min_calc()
-            print("仕事時間に入ります")
-            
+        
+        if (timerStatus.count == 0) {
+            // 休憩時間に入るか仕事時間に入るか
+            if (timerStatus.working) {
+                // 仕事中(timerStatus.working = true)ならタイマーを休憩時間にセット
+                timerStatus.count = timerStatus.breakTime
+                timerStatus.working = false
+                timer_sec_min_calc()
+                print("休憩時間に入ります")
+            } else {
+                // 休憩中(timerStatus.working = false)ならタイマーを仕事時間にセット
+                timerStatus.count = timerStatus.workTime
+                timerStatus.working = true
+                timer_sec_min_calc()
+                print("仕事時間に入ります")
+                
+            }
         }
+        
     }
     
     func countDown() {
@@ -54,13 +58,10 @@ struct ContentView: View {
         canCount = true
         cntbtnText = "停止"
         print("カウントを開始します")
+        print("canCount\(canCount)")
         
         // カウントダウン処理
-        timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true, block: {_ in
-            // 1秒経過したか判定する変数
-            // (backgroundに移行したときにカウントをずらさないため)
-            timerStatus.scheduledTimerProgress += 1
-            print(timerStatus.scheduledTimerProgress)
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: {_ in
             // タイマーが0以下のとき
             if (timerStatus.count <= 1) {
                 // カウント終了処理
@@ -68,15 +69,16 @@ struct ContentView: View {
                 
                 
             // タイマーが1秒以上のとき
-            } else if (timerStatus.scheduledTimerProgress == 10) {
+            } else {
                 // タイマー1減らす
                 timerStatus.count -= 1
                 print(timerStatus.count)
                 timer_sec_min_calc()
-                timerStatus.scheduledTimerProgress = 0
+                
                 
             }
         })
+        
     }
     
     
