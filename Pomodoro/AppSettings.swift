@@ -3,7 +3,7 @@ import SwiftUI
 // タイマーの設を定管理するクラス
 class TimerSettings: ObservableObject {
     @Published var playSoundOnDone:Bool = true
-    
+    @Published var developerMode:Bool = false
     
 }
 

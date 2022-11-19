@@ -10,6 +10,8 @@ import SwiftUI
 struct ContentView: View {
     // バックグラウンド処理のための変数
     @Environment(\.scenePhase) private var scenePhase
+    @State var backgroundTaskId = UIBackgroundTaskIdentifier.init(rawValue: 0)
+
     
     // タイマーのカウントなどを管理する
     @EnvironmentObject var timerStatus: TimerStatus
@@ -50,7 +52,8 @@ struct ContentView: View {
                 
             }
         }
-        
+        UIApplication.shared.endBackgroundTask(self.backgroundTaskId)
+
     }
     
     func countDown() {
@@ -61,6 +64,7 @@ struct ContentView: View {
         print("canCount\(canCount)")
         
         // カウントダウン処理
+        self.backgroundTaskId = UIApplication.shared.beginBackgroundTask(expirationHandler: nil)
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: {_ in
             // タイマーが0以下のとき
             if (timerStatus.count <= 1) {
@@ -166,6 +170,8 @@ struct ContentView_Previews: PreviewProvider {
 struct SettingsView: View {
     
     @EnvironmentObject var appSettings: TimerSettings
+    @EnvironmentObject var timerStatus: TimerStatus
+
     @Binding var isActive: Bool
     
     var body: some View {
@@ -202,6 +208,26 @@ struct SettingsView: View {
                 VStack {
                     Toggle(isOn: $appSettings.playSoundOnDone) {
                         Text("カウント終了時にサウンドを鳴らす")
+                    }
+                    
+                    Toggle(isOn: $appSettings.developerMode) {
+                        Text("開発者モード")
+                        Text("この設定を変えるとのタイマーのカウントがリセットされます")
+                    }
+                    .onChange(of: appSettings.developerMode) { newValue in
+                        print(newValue)
+                        
+                        if (newValue) {
+                            timerStatus.breakTime = 3
+                            timerStatus.workTime = 15
+                            timerStatus.count = 1
+                            
+                            
+                        } else {
+                            timerStatus.breakTime = 300
+                            timerStatus.workTime = 1500
+                            timerStatus.count = 1
+                        }
                     }
                 }
                 .padding()
