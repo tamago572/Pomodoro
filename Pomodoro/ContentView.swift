@@ -8,12 +8,18 @@
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject var timerStatus: TimerManagement
+    // バックグラウンド処理のための変数
+    @Environment(\.scenePhase) private var scenePhase
+    @State var backgroundTaskId = UIBackgroundTaskIdentifier.init(rawValue: 0)
+
+    
+    // タイマーのカウントなどを管理する
+    @EnvironmentObject var timerStatus: TimerStatus
     
     @State private var timer:Timer!
     @State private var cntbtnText = "開始"
     @State var canCount = false
-    @State private var showingSettingSheet = false
+    @State private var showingSettingsSheet = false
     
     @State private var timerMin = 0
     @State private var timerSec = 0
@@ -25,8 +31,58 @@ struct ContentView: View {
         canCount = false
         cntbtnText = "開始"
         print("カウントを終了します")
-        
+        print("canCount\(canCount)")
+        // タイマー破棄
         timer.invalidate()
+        
+        if (timerStatus.count == 0) {
+            // 休憩時間に入るか仕事時間に入るか
+            if (timerStatus.working) {
+                // 仕事中(timerStatus.working = true)ならタイマーを休憩時間にセット
+                timerStatus.count = timerStatus.breakTime
+                timerStatus.working = false
+                timer_sec_min_calc()
+                print("休憩時間に入ります")
+            } else {
+                // 休憩中(timerStatus.working = false)ならタイマーを仕事時間にセット
+                timerStatus.count = timerStatus.workTime
+                timerStatus.working = true
+                timer_sec_min_calc()
+                print("仕事時間に入ります")
+                
+            }
+        }
+        UIApplication.shared.endBackgroundTask(self.backgroundTaskId)
+
+    }
+    
+    func countDown() {
+        // カウント開始
+        canCount = true
+        cntbtnText = "停止"
+        print("カウントを開始します")
+        print("canCount\(canCount)")
+        
+        // カウントダウン処理
+        self.backgroundTaskId = UIApplication.shared.beginBackgroundTask(expirationHandler: nil)
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true, block: {_ in
+            // タイマーが0以下のとき
+            if (timerStatus.count <= 1) {
+                // カウント終了処理
+                stopCount()
+                
+                
+            // タイマーが1秒以上のとき
+            } else {
+                // タイマー1減らす
+                timerStatus.count -= 1
+                print(timerStatus.count)
+                timer_sec_min_calc()
+                
+                
+            }
+        })
+        
     }
     
     
@@ -48,11 +104,13 @@ struct ContentView: View {
                 Spacer()
                 
                 Button {
-                    showingSettingSheet.toggle()
+                    showingSettingsSheet = true
                 } label: {
                     Image(systemName: "gearshape")
-                        .foregroundColor(Color("AccentColor"))
                         .font(.largeTitle)
+                }
+                .fullScreenCover(isPresented: $showingSettingsSheet) {
+                    SettingsView(isActive: $showingSettingsSheet)
                 }
 
             }
@@ -63,6 +121,18 @@ struct ContentView: View {
             Text("\(zeroFillmin):\(zeroFillsec)")
                 .font(.largeTitle)
                 .padding()
+                .onChange(of: scenePhase) { phase in
+                    switch phase {
+                    case .active:
+                        print("active")
+                    case .inactive:
+                        print("inactive")
+                    case .background:
+                        print("background")
+                    @unknown default:
+                        print("@unknown")
+                    }
+                }
             
             Button {
                 // カウントダウンしない場合
@@ -72,42 +142,7 @@ struct ContentView: View {
                 
                 // カウントダウンする場合
                 } else {
-                    // カウント開始
-                    canCount = true
-                    cntbtnText = "停止"
-                    print("カウントを開始します")
-                    
-                    // カウントダウン処理
-                    timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true, block: {_ in
-                        
-                        // タイマーが0以下のとき
-                        if (timerStatus.count <= 1) {
-                            // カウント終了処理
-                            stopCount()
-                            
-                            // 休憩時間に入るか仕事時間に入るか
-                            if (timerStatus.working) {
-                                // 仕事中(timerStatus.working = true)ならタイマーを休憩時間にセット
-                                timerStatus.count = timerStatus.breakTime
-                                timerStatus.working = false
-                                timer_sec_min_calc()
-                                print("休憩時間に入ります")
-                            } else {
-                                // 休憩中(timerStatus.working = false)ならタイマーを仕事時間にセット
-                                timerStatus.count = timerStatus.workTime
-                                timerStatus.working = true
-                                timer_sec_min_calc()
-                                print("仕事時間に入ります")
-                            }
-                            
-                        } else {
-                            // タイマー1減らす
-                            timerStatus.count -= 1
-                            print(timerStatus.count)
-                            timer_sec_min_calc()
-                        }
-                    })
-                    
+                    countDown()
                 }
             } label: {
                 Text(cntbtnText)
@@ -117,13 +152,86 @@ struct ContentView: View {
 
             Spacer()
         }
-        
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
-            .environmentObject(TimerManagement())
+            .environmentObject(TimerStatus())
+        SettingsView(isActive: Binding.constant(false))
+            .environmentObject(TimerSettings())
+        
+    }
+}
+
+
+// Settings View
+struct SettingsView: View {
+    
+    @EnvironmentObject var appSettings: TimerSettings
+    @EnvironmentObject var timerStatus: TimerStatus
+
+    @Binding var isActive: Bool
+    
+    var body: some View {
+        VStack {
+            HStack {
+                Text("設定")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding()
+                
+                Spacer()
+                
+                Button {
+                    isActive = false
+                } label: {
+                    Text("閉じる")
+                }
+                .padding()
+
+            }
+            
+            Divider()
+            
+            ScrollView {
+                HStack {
+                    Text("タイマーの設定")
+                        .font(.title2)
+                        .fontWeight(.bold)
+                        
+                    Spacer()
+                }
+                .padding([.top, .leading])
+                
+                VStack {
+                    Toggle(isOn: $appSettings.playSoundOnDone) {
+                        Text("カウント終了時にサウンドを鳴らす")
+                    }
+                    
+                    Toggle(isOn: $appSettings.developerMode) {
+                        Text("開発者モード")
+                        Text("この設定を変えるとのタイマーのカウントがリセットされます")
+                    }
+                    .onChange(of: appSettings.developerMode) { newValue in
+                        print(newValue)
+                        
+                        if (newValue) {
+                            timerStatus.breakTime = 3
+                            timerStatus.workTime = 15
+                            timerStatus.count = 1
+                            
+                            
+                        } else {
+                            timerStatus.breakTime = 300
+                            timerStatus.workTime = 1500
+                            timerStatus.count = 1
+                        }
+                    }
+                }
+                .padding()
+            }
+        }
     }
 }
